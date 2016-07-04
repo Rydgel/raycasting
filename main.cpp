@@ -50,7 +50,7 @@ void drawMinimap(sf::RenderWindow& w, Player& player)
             if (wall > 0) {
                 sf::RectangleShape rectangle(sf::Vector2f(minimap_scale, minimap_scale));
                 rectangle.setPosition(x * minimap_scale, y * minimap_scale);
-                rectangle.setFillColor(sf::Color(200, 200, 200));
+                rectangle.setFillColor(sf::Color(200, 200, 200, 128));
                 w.draw(rectangle);
             }
         }
@@ -59,7 +59,7 @@ void drawMinimap(sf::RenderWindow& w, Player& player)
     // draw player
     // player dot
     sf::RectangleShape rectangle(sf::Vector2f(4, 4));
-    rectangle.setFillColor(sf::Color(255, 0, 0));
+    rectangle.setFillColor(sf::Color(255, 0, 0, 128));
     rectangle.setPosition((float) (player.x * minimap_scale - 2), (float) (player.y * minimap_scale - 2));
     w.draw(rectangle);
     // player direction line
@@ -72,14 +72,14 @@ void drawMinimap(sf::RenderWindow& w, Player& player)
                     )
             };
 
-    line[0].color = sf::Color(255, 0, 0);
-    line[1].color = sf::Color(255, 0, 0);
+    line[0].color = sf::Color(255, 0, 0, 128);
+    line[1].color = sf::Color(255, 0, 0, 128);
     w.draw(line, 2, sf::Lines);
 }
 
 int main(int argc, char **argv)
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "raycasting");
+    sf::RenderWindow window(sf::VideoMode(320 * 4, 240 * 4), "raycasting");
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
 
