@@ -1,5 +1,4 @@
 #include <cstring>
-#include <cstdio>
 #include "player.h"
 
 
@@ -13,15 +12,6 @@ Player::Player(int map[24][24])
     move_speed = 0.18;
     rot_speed = 6.0 * M_PI / 180.0;
     memcpy(worldMap, map, 24 * 24 * sizeof(**map));
-
-    for (int y = 0; y < 24; ++y)
-    {
-        for (int x = 0; x < 24; ++x)
-        {
-            printf("%d", worldMap[y][x]);
-        }
-        printf("\n");
-    }
 }
 
 bool Player::isBlocking(double x, double y)
