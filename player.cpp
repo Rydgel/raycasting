@@ -1,8 +1,7 @@
-#include <cstring>
 #include "player.h"
 
 
-Player::Player(int map[24][24])
+Player::Player(MapManager *map)
 {
     x = 16.0;
     y = 10.0;
@@ -11,19 +10,7 @@ Player::Player(int map[24][24])
     speed = 0;
     move_speed = 0.18;
     rot_speed = 6.0 * M_PI / 180.0;
-    memcpy(worldMap, map, 24 * 24 * sizeof(**map));
-}
-
-bool Player::isBlocking(double x, double y)
-{
-    // First make sure that we cannot move
-    // outside the boundaries of the level
-    if (y < 0 || y >= 24 || x < 0 || x >= 24) {
-        return true;
-    }
-    // Return true if the map block is not 0,
-    // i.e. if there is a blocking wall.
-    return (worldMap[(int) floor(y)][(int) floor(x)] != 0);
+    this->map = map;
 }
 
 void Player::update()
@@ -39,7 +26,7 @@ void Player::update()
     double newX = x + cos(rot) * moveStep;
     double newY = y + sin(rot) * moveStep;
 
-    if (isBlocking(newX, newY)) {   // are we allowed to move to the new position?
+    if (map->isBlocking(newX, newY)) {   // are we allowed to move to the new position?
         return; // no, bail out.
     }
 

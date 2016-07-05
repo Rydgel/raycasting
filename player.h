@@ -2,11 +2,10 @@
 #define RAYCASTING_PLAYER_H
 
 #import <cmath>
+#include "map_manager.h"
 
 class Player
 {
-private:
-    bool isBlocking(double x, double y);
 public:
     double x;
     double y;
@@ -15,9 +14,10 @@ public:
     int speed;
     double move_speed;
     double rot_speed;
-    int worldMap[24][24];
 
-    Player(int worldMap[24][24]);
+    MapManager *map;
+
+    Player(MapManager *map);
     ~Player() { };
     void update();
 };

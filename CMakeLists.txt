@@ -7,9 +7,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 set(SOURCE_FILES
         main.cpp
+        game.cpp game.h
+        game_state.h
+        texture_manager.cpp texture_manager.h
         player.cpp player.h
-
-        )
+        game_state_run.cpp game_state_run.h map_manager.cpp map_manager.h)
 add_executable(raycasting ${SOURCE_FILES})
 
 find_package(SFML REQUIRED system window graphics network audio)
