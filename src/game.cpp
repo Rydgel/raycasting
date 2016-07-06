@@ -1,6 +1,7 @@
 #include <stack>
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 #include "game.h"
 #include "game_state.h"
@@ -64,7 +65,7 @@ Game::Game()
 
     this->window.create(sf::VideoMode(320 * 4, 240 * 4), "raycasting!");
     this->window.setFramerateLimit(60);
-    this->window.setVerticalSyncEnabled(true);
+    // this->window.setVerticalSyncEnabled(true);
 }
 
 Game::~Game()

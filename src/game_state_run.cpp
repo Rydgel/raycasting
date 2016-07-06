@@ -1,3 +1,4 @@
+#include <sstream>
 #include "game_state_run.h"
 
 
@@ -43,11 +44,33 @@ void GameStateRun::drawPlayerMinimap(sf::RenderWindow& w, Player& player)
     w.draw(line, 2, sf::Lines);
 }
 
+void GameStateRun::drawFPSCounter(sf::RenderWindow& w, float fps)
+{
+    sf::Text text;
+    text.setFont(font);
+    text.setCharacterSize(40);
+    text.setStyle(sf::Text::Bold);
+    text.setColor(sf::Color::White);
+    text.setPosition(0, 0);
+
+    std::ostringstream ss;
+    ss << round(fps);
+
+    text.setString(ss.str());
+
+    w.draw(text);
+}
+
 
 void GameStateRun::draw(const float dt)
 {
     this->game->window.clear(sf::Color::Black);
     // this->game->window.draw(this->background);
+
+    // draw fps
+    if (fps_counter) {
+        drawFPSCounter(this->game->window, 1.0f / dt);
+    }
 
     // draw minimap
     if (draw_minimap) {
@@ -88,6 +111,8 @@ void GameStateRun::handleInput()
                         player->dir = 1; break;
                     case sf::Keyboard::M:
                         draw_minimap = !draw_minimap; break;
+                    case sf::Keyboard::F:
+                        fps_counter = !fps_counter; break;
                     case sf::Keyboard::Escape:
                         this->game->window.close(); break;
                     default: break;
@@ -117,6 +142,7 @@ GameStateRun::GameStateRun(Game* game)
 {
     this->game = game;
     this->player = new Player(&map);
+    this->font.loadFromFile("resources/visitor1.ttf");
 }
 
 GameStateRun::~GameStateRun()

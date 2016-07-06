@@ -12,13 +12,18 @@ class GameStateRun : public GameState
 private:
     void drawMinimap(sf::RenderWindow& w, Player& player);
     void drawPlayerMinimap(sf::RenderWindow& w, Player& player);
+    void drawFPSCounter(sf::RenderWindow& w, float fps);
 public:
     Game *game;
     Player *player;
     MapManager map;
 
+    // assets
+    sf::Font font;
+
     int minimap_scale = 16;
     bool draw_minimap = true;
+    bool fps_counter = true;
 
     virtual void draw(const float dt);
     virtual void update(const float dt);
