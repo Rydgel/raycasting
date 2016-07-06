@@ -8,19 +8,19 @@ Player::Player(MapManager *map)
     this->dir = 0;
     this->rot = 0.0;
     this->speed = 0;
-    this->move_speed = 0.18;
-    this->rot_speed = 6.0 * M_PI / 180.0;
+    this->move_speed = 4.0;
+    this->rot_speed = 100.0 * M_PI / 180.0;
     this->map = map;
 }
 
-void Player::update()
+void Player::update(const float dt)
 {
     // Player will move this far along
     // the current direction vector
-    double moveStep = this->speed * this->move_speed;
+    double moveStep = this->speed * this->move_speed * dt;
 
     // Add rotation if player is rotating (player.dir != 0)
-    this->rot += this->dir * this->rot_speed;
+    this->rot += this->dir * this->rot_speed * dt;
 
     // Calculate new player position with simple trigonometry
     double newX = this->x + cos(this->rot) * moveStep;

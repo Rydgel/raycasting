@@ -82,7 +82,7 @@ void GameStateRun::draw(const float dt)
 
 void GameStateRun::update(const float dt)
 {
-    player->update();
+    player->update(dt);
 
 }
 

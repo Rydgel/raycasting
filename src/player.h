@@ -19,7 +19,7 @@ public:
 
     Player(MapManager *map);
     ~Player() { };
-    void update();
+    void update(const float dt);
 };
 
 

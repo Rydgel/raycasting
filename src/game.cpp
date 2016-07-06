@@ -64,7 +64,7 @@ Game::Game()
     this->loadTextures();
 
     this->window.create(sf::VideoMode(320 * 4, 240 * 4), "raycasting!");
-    this->window.setFramerateLimit(60);
+    // this->window.setFramerateLimit(60);
     // this->window.setVerticalSyncEnabled(true);
 }
 
