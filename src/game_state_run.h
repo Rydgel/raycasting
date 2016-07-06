@@ -9,14 +9,29 @@
 
 class GameStateRun : public GameState
 {
-private:
-    void drawMinimap(sf::RenderWindow& w, Player& player);
-    void drawPlayerMinimap(sf::RenderWindow& w, Player& player);
-    void drawFPSCounter(sf::RenderWindow& w, float fps);
 public:
     Game *game;
     Player *player;
     MapManager map;
+
+    // camera stuff
+    int strip_width = 2;
+    double fov = M_PI * 60 / 180;
+    double fov_half = fov / 2;
+    int num_rays;
+    double view_dist;
+
+    // stripes drawings
+    struct Stripe {
+        double top;
+        double left;
+        double width;
+        double height;
+        double xHit;
+        double yHit;
+    };
+
+    std::vector<Stripe> stripes;
 
     // assets
     sf::Font font;
@@ -31,6 +46,17 @@ public:
 
     GameStateRun(Game *game);
     ~GameStateRun();
+private:
+    void drawMinimap(sf::RenderWindow& w, Player& player);
+    void drawPlayerMinimap(sf::RenderWindow& w, Player& player);
+    void drawFPSCounter(sf::RenderWindow& w, float fps);
+    void drawRays(sf::RenderWindow& w);
+    void drawRay(sf::RenderWindow& w, double xHit, double yHit);
+    // camera
+    void castRays();
+    void castSingleRay(double rayAngle, int stripIdx);
+    // stripes
+    void initStripes();
 };
 
 

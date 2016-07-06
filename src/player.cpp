@@ -22,6 +22,10 @@ void Player::update(const float dt)
     // Add rotation if player is rotating (player.dir != 0)
     this->rot += this->dir * this->rot_speed * dt;
 
+    // make sure the angle is between 0 and 360 degrees
+    while (rot < 0) rot += 2 * M_PI;
+    while (rot >= 2 * M_PI) rot -= 2 * M_PI;
+
     // Calculate new player position with simple trigonometry
     double newX = this->x + cos(this->rot) * moveStep;
     double newY = this->y + sin(this->rot) * moveStep;

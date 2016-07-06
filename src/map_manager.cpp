@@ -6,7 +6,7 @@ bool MapManager::isBlocking(double x, double y)
 {
     // First make sure that we cannot move
     // outside the boundaries of the level
-    if (y < 0 || y >= 24 || x < 0 || x >= 24) {
+    if (y < 0 || y >= mapHeight || x < 0 || x >= mapWidth) {
         return true;
     }
     // Return true if the map block is not 0,
