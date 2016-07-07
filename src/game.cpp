@@ -1,7 +1,6 @@
 #include <stack>
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
 
 #include "game.h"
 #include "game_state.h"
@@ -63,7 +62,7 @@ Game::Game()
 {
     this->loadTextures();
 
-    this->window.create(sf::VideoMode(screen_width * scale, screen_height * scale), "raycasting!");
+    this->window.create(sf::VideoMode(screen_width * scale, screen_height * scale), "");
     //this->window.create(sf::VideoMode::getFullscreenModes()[0], "raycasting!", sf::Style::Fullscreen);
     this->window.setFramerateLimit(60);
     this->window.setVerticalSyncEnabled(true);
