@@ -29,6 +29,7 @@ public:
         double height;
         double xHit;
         double yHit;
+        int wallType;
     };
 
     std::vector<Stripe> stripes;
@@ -52,6 +53,7 @@ private:
     void drawFPSCounter(sf::RenderWindow& w, float fps);
     void drawRays(sf::RenderWindow& w);
     void drawRay(sf::RenderWindow& w, double xHit, double yHit);
+    void drawCamera(sf::RenderWindow& w);
     // camera
     void castRays();
     void castSingleRay(double rayAngle, int stripIdx);

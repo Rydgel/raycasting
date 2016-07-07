@@ -12,6 +12,7 @@ void GameStateRun::initStripes()
         stripe.width = strip_width;
         stripe.xHit = 0;
         stripe.yHit = 0;
+        stripe.wallType = 0;
         stripes.push_back(stripe);
     }
 }
@@ -39,6 +40,7 @@ void GameStateRun::castSingleRay(double rayAngle, int stripIdx)
 {
     // first make sure the angle is between 0 and 360 degrees
     rayAngle = fmod(rayAngle, 2 * M_PI);
+    if (rayAngle < 0) rayAngle += 2 * M_PI;
 
     // moving right/left? up/down? Determined by which quadrant the angle is in.
     double right = (rayAngle > 2 * M_PI * 0.75 || rayAngle < 2 * M_PI * 0.25);
@@ -131,7 +133,6 @@ void GameStateRun::castSingleRay(double rayAngle, int stripIdx)
     }
 
     if (dist) {
-        // this->drawRay(this->game->window, xHit, yHit);
         // we update the stripe
         Stripe stripe = stripes[stripIdx - 1];
 
@@ -147,23 +148,16 @@ void GameStateRun::castSingleRay(double rayAngle, int stripIdx)
         // thus the height on the screen is equal to wall_height_real * viewDist / dist
         double height = round(view_dist / dist);
 
-        // width is the same, but we have to stretch the texture to a factor of stripWidth to make it fill the strip correctly
-        double width = height * strip_width;
-
         // top placement is easy since everything is centered on the x-axis, so we simply move
         // it half way down the screen and then half the wall height back up.
         double top = round((game->screen_height - height) / 2);
 
         stripe.height = height;
         stripe.top = top;
-        stripe.width = width;
+        stripe.width = strip_width;
         stripe.xHit = xHit;
         stripe.yHit = yHit;
-
-        /*double texX = round(textureX * width);
-
-        if (texX > width - strip_width)
-            texX = width - strip_width;*/
+        stripe.wallType = wallType;
 
         stripes[stripIdx - 1] = stripe;
     }
@@ -235,6 +229,36 @@ void GameStateRun::drawPlayerMinimap(sf::RenderWindow& w, Player& player)
     w.draw(line, 2, sf::Lines);
 }
 
+void GameStateRun::drawCamera(sf::RenderWindow &w)
+{
+    int scale = game->scale;
+    for (Stripe &stripe : stripes)
+    {
+        sf::RectangleShape rectangle(sf::Vector2f((float) stripe.width * scale, (float) stripe.height * scale));
+        sf::Color color;
+        switch (stripe.wallType) {
+            case 1:
+                color = sf::Color(255, 0, 0);
+                break;
+            case 2:
+                color = sf::Color(0, 255, 0);
+                break;
+            case 3:
+                color = sf::Color(0, 0, 255);
+                break;
+            case 4:
+                color = sf::Color(0, 255, 255);
+                break;
+            default:
+                color = sf::Color(255, 0, 255);
+                break;
+        }
+        rectangle.setFillColor(color);
+        rectangle.setPosition((float) stripe.left * scale, (float) stripe.top * scale);
+        w.draw(rectangle);
+    }
+}
+
 void GameStateRun::drawFPSCounter(sf::RenderWindow& w, float fps)
 {
     sf::Text text;
@@ -257,6 +281,8 @@ void GameStateRun::draw(const float dt)
 {
     this->game->window.clear(sf::Color::Black);
     // this->game->window.draw(this->background);
+
+    drawCamera(this->game->window);
 
     // draw fps
     if (fps_counter) {
@@ -346,4 +372,3 @@ GameStateRun::~GameStateRun()
 {
     delete player;
 }
-

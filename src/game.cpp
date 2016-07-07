@@ -64,9 +64,9 @@ Game::Game()
     this->loadTextures();
 
     this->window.create(sf::VideoMode(screen_width * scale, screen_height * scale), "raycasting!");
-    // this->window.create(sf::VideoMode::getFullscreenModes()[0], "raycasting!", sf::Style::Fullscreen);
-    // this->window.setFramerateLimit(60);
-    // this->window.setVerticalSyncEnabled(true);
+    //this->window.create(sf::VideoMode::getFullscreenModes()[0], "raycasting!", sf::Style::Fullscreen);
+    this->window.setFramerateLimit(60);
+    this->window.setVerticalSyncEnabled(true);
 }
 
 Game::~Game()
