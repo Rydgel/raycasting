@@ -5,14 +5,7 @@
 void GameStateRun::initStripes()
 {
     for (int i = 0; i < game->screen_width; i += strip_width) {
-        Stripe stripe;
-        stripe.top = 0;
-        stripe.left = i;
-        stripe.height = 0;
-        stripe.width = strip_width;
-        stripe.xHit = 0;
-        stripe.yHit = 0;
-        stripe.wallType = 0;
+        Stripe stripe(i, strip_width);
         stripes.push_back(stripe);
     }
 }
@@ -24,14 +17,11 @@ void GameStateRun::castRays()
     for (int i = 0; i < num_rays; ++i) {
         // where on the screen does ray go through?
         double rayScreenPos = (-num_rays/2 + i) * strip_width;
-
         // the distance from the viewer to the point on the screen, simply Pythagoras.
         double rayViewDist = sqrt(rayScreenPos*rayScreenPos + view_dist * view_dist);
-
         // the angle of the ray, relative to the viewing direction.
         // right triangle: a = sin(A) * c
         double rayAngle = asin(rayScreenPos / rayViewDist);
-
         this->castSingleRay(player->rot + rayAngle, ++stripIdx);
     }
 }

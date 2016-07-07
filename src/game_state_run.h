@@ -5,6 +5,7 @@
 #include "game_state.h"
 #include "player.h"
 #include "map_manager.h"
+#include "stripe.h"
 
 
 class GameStateRun : public GameState
@@ -17,21 +18,10 @@ public:
     // camera stuff
     int strip_width = 2;
     double fov = M_PI * 60 / 180;
-    double fov_half = fov / 2;
     int num_rays;
     double view_dist;
 
     // stripes drawings
-    struct Stripe {
-        double top;
-        double left;
-        double width;
-        double height;
-        double xHit;
-        double yHit;
-        int wallType;
-    };
-
     std::vector<Stripe> stripes;
 
     // assets
