@@ -4,7 +4,8 @@
 
 void GameStateRun::initStripes()
 {
-    for (int i = 0; i < game->screen_width; i += strip_width) {
+    for (int i = 0; i < game->screen_width; i += strip_width)
+    {
         Stripe stripe(i, strip_width);
         stripes.push_back(stripe);
     }
@@ -14,7 +15,8 @@ void GameStateRun::castRays()
 {
     int stripIdx = 0;
 
-    for (int i = 0; i < num_rays; ++i) {
+    for (int i = 0; i < num_rays; ++i)
+    {
         // where on the screen does ray go through?
         double rayScreenPos = (-num_rays/2 + i) * strip_width;
         // the distance from the viewer to the point on the screen, simply Pythagoras.
@@ -33,8 +35,8 @@ void GameStateRun::castSingleRay(double rayAngle, int stripIdx)
     if (rayAngle < 0) rayAngle += 2 * M_PI;
 
     // moving right/left? up/down? Determined by which quadrant the angle is in.
-    double right = (rayAngle > 2 * M_PI * 0.75 || rayAngle < 2 * M_PI * 0.25);
-    double up = (rayAngle < 0 || rayAngle > M_PI);
+    bool right = (rayAngle > 2 * M_PI * 0.75 || rayAngle < 2 * M_PI * 0.25);
+    bool up = (rayAngle < 0 || rayAngle > M_PI);
 
     int wallType = 0;
 
@@ -46,7 +48,6 @@ void GameStateRun::castSingleRay(double rayAngle, int stripIdx)
     double xHit = 0;        // the x and y coord of where the ray hit the block
     double yHit = 0;
 
-    int textureX;   // the x-coord on the texture of the block, ie. what part of the texture are we going to render
     int wallX;      // the (x,y) map coords of the block
     int wallY;
 
@@ -64,24 +65,24 @@ void GameStateRun::castSingleRay(double rayAngle, int stripIdx)
     double x = right ? ceil(player->x) : floor(player->x);  // starting horizontal position, at one of the edges of the current map block
     double y = player->y + (x - player->x) * slope;         // starting vertical position. We add the small horizontal step we just made, multiplied by the slope.
 
-    while (x >= 0 && x < map.mapWidth && y >= 0 && y < map.mapHeight) {
+    while (x >= 0 && x < map.mapWidth && y >= 0 && y < map.mapHeight)
+    {
         wallX = (int) floor(x + (right ? 0 : -1));
         wallY = (int) floor(y);
 
         // is this point inside a wall block?
-        if (map.worldMap[wallY][wallX] > 0) {
+        if (map.worldMap[wallY][wallX] > 0)
+        {
             double distX = x - player->x;
             double distY = y - player->y;
             dist = distX*distX + distY*distY;      // the distance from the player to this point, squared.
 
             wallType = map.worldMap[wallY][wallX]; // we'll remember the type of wall we hit for later
-            textureX = (int) fmod(y, 1);           // where exactly are we on the wall? textureX is the x coordinate on the texture that we'll use later when texturing the wall.
-            if (!right) textureX = 1 - textureX;   // if we're looking to the left side of the map, the texture should be reversed
 
             xHit = x;   // save the coordinates of the hit. We only really use these to draw the rays on minimap.
             yHit = y;
 
-            wallIsHorizontal = true;
+            wallIsHorizontal = false;
 
             break;
         }
@@ -100,10 +101,12 @@ void GameStateRun::castSingleRay(double rayAngle, int stripIdx)
     y = up ? floor(player->y) : ceil(player->y);
     x = player->x + (y - player->y) * slope;
 
-    while (x >= 0 && x < map.mapWidth && y >= 0 && y < map.mapHeight) {
+    while (x >= 0 && x < map.mapWidth && y >= 0 && y < map.mapHeight)
+    {
         wallY = (int) floor(y + (up ? -1 : 0));
         wallX = (int) floor(x);
-        if (map.worldMap[wallY][wallX] > 0) {
+        if (map.worldMap[wallY][wallX] > 0)
+        {
             double distX = x - player->x;
             double distY = y - player->y;
             double blockDist = distX*distX + distY*distY;
@@ -113,16 +116,18 @@ void GameStateRun::castSingleRay(double rayAngle, int stripIdx)
                 yHit = y;
 
                 wallType = map.worldMap[wallY][wallX];
-                textureX = (int) fmod(x, 1);
-                if (up) textureX = 1 - textureX;
+
+                wallIsHorizontal = true;
             }
+
             break;
         }
         x += dXHor;
         y += dYHor;
     }
 
-    if (dist) {
+    if (dist)
+    {
         // we update the stripe
         Stripe stripe = stripes[stripIdx - 1];
 
@@ -136,17 +141,18 @@ void GameStateRun::castSingleRay(double rayAngle, int stripIdx)
 
         // "real" wall height in the game world is 1 unit, the distance from the player to the screen is viewDist,
         // thus the height on the screen is equal to wall_height_real * viewDist / dist
-        double height = round(view_dist / dist);
+        double height = view_dist / dist;
 
         // top placement is easy since everything is centered on the x-axis, so we simply move
         // it half way down the screen and then half the wall height back up.
-        double top = round((game->screen_height - height) / 2);
+        double top = (game->screen_height - height) / 2;
 
         stripe.height = height;
         stripe.top = top;
         stripe.width = strip_width;
         stripe.xHit = xHit;
         stripe.yHit = yHit;
+        stripe.wallIsHorizontal = wallIsHorizontal;
         stripe.wallType = wallType;
 
         stripes[stripIdx - 1] = stripe;
@@ -185,7 +191,8 @@ void GameStateRun::drawMinimap(sf::RenderWindow& w, Player& player)
         {
             int wall = this->map.worldMap[y][x];
 
-            if (wall > 0) {
+            if (wall > 0)
+            {
                 sf::RectangleShape rectangle(sf::Vector2f(minimap_scale, minimap_scale));
                 rectangle.setPosition(x * minimap_scale, y * minimap_scale);
                 rectangle.setFillColor(sf::Color(200, 200, 200, 128));
@@ -224,29 +231,61 @@ void GameStateRun::drawCamera(sf::RenderWindow &w)
     int scale = game->scale;
     for (Stripe &stripe : stripes)
     {
-        sf::RectangleShape rectangle(sf::Vector2f((float) stripe.width * scale, (float) stripe.height * scale));
-        sf::Color color;
-        switch (stripe.wallType) {
-            case 1:
-                color = sf::Color(255, 0, 0);
-                break;
-            case 2:
-                color = sf::Color(0, 255, 0);
-                break;
-            case 3:
-                color = sf::Color(0, 0, 255);
-                break;
-            case 4:
-                color = sf::Color(0, 255, 255);
-                break;
-            default:
-                color = sf::Color(255, 0, 255);
-                break;
+        sf::Texture& tex = game->texmgr.getRef("greystone");
+
+        int offset;
+
+        if (stripe.wallIsHorizontal)
+            offset = (int) fmod(stripe.xHit * 64, 64);
+        else
+            offset = (int) fmod(stripe.yHit * 64, 64);
+
+        float left = (float) (stripe.left * scale);
+        float top = (float) (stripe.top * scale);
+        float width = (float) stripe.width * scale;
+        float height = (float) stripe.height * scale;
+
+        sf::VertexArray slice(sf::Quads, 4);
+        slice[0].position = sf::Vector2f(left, top);
+        slice[1].position = sf::Vector2f(left + width, top);
+        slice[2].position = sf::Vector2f(left + width, top + height);
+        slice[3].position = sf::Vector2f(left, top + height);
+
+        slice[0].texCoords = sf::Vector2f(offset, 0);
+        slice[1].texCoords = sf::Vector2f(offset + strip_width, 0);
+        slice[2].texCoords = sf::Vector2f(offset + strip_width, 64);
+        slice[3].texCoords = sf::Vector2f(offset, 64);
+
+        // some kind of shadows..
+        if (!stripe.wallIsHorizontal) {
+            slice[0].color = sf::Color(200, 200, 200, 255);
+            slice[1].color = sf::Color(200, 200, 200, 255);
+            slice[2].color = sf::Color(200, 200, 200, 255);
+            slice[3].color = sf::Color(200, 200, 200, 255);
         }
-        rectangle.setFillColor(color);
-        rectangle.setPosition((float) stripe.left * scale, (float) stripe.top * scale);
-        w.draw(rectangle);
+
+        w.draw(slice, &tex);
     }
+}
+
+void GameStateRun::drawFloor(sf::RenderWindow &w)
+{
+    int width = game->screen_width * game->scale;
+    int height = game->screen_height / 2 * game->scale;
+    sf::RectangleShape rectangle(sf::Vector2f(width, height));
+    rectangle.setPosition(0, 0);
+    rectangle.setFillColor(sf::Color(112, 112, 112));
+    w.draw(rectangle);
+}
+
+void GameStateRun::drawCeiling(sf::RenderWindow &w)
+{
+    int width = game->screen_width * game->scale;
+    int height = game->screen_height / 2 * game->scale;
+    sf::RectangleShape rectangle(sf::Vector2f(width, height));
+    rectangle.setPosition(0, height);
+    rectangle.setFillColor(sf::Color(56, 56, 56));
+    w.draw(rectangle);
 }
 
 void GameStateRun::drawFPSCounter(sf::RenderWindow& w, float fps)
@@ -272,15 +311,17 @@ void GameStateRun::draw(const float dt)
     this->game->window.clear(sf::Color::Black);
     // this->game->window.draw(this->background);
 
+    drawFloor(this->game->window);
+    drawCeiling(this->game->window);
     drawCamera(this->game->window);
 
     // draw fps
-    if (fps_counter) {
+    if (fps_counter)
         drawFPSCounter(this->game->window, 1.0f / dt);
-    }
 
     // draw minimap
-    if (draw_minimap) {
+    if (draw_minimap)
+    {
         drawMinimap(this->game->window, *player);
         drawRays(this->game->window);
     }
@@ -308,7 +349,8 @@ void GameStateRun::handleInput()
                 break;
                 // key pressed
             case sf::Event::KeyPressed:
-                switch (event.key.code) {
+                switch (event.key.code)
+                {
                     case sf::Keyboard::Up:
                         player->speed = 1; break;
                     case sf::Keyboard::Down:
@@ -327,7 +369,8 @@ void GameStateRun::handleInput()
                 }
                 break;
             case sf::Event::KeyReleased:
-                switch (event.key.code) {
+                switch (event.key.code)
+                {
                     case sf::Keyboard::Up:
                     case sf::Keyboard::Down:
                         player->speed = 0; break;

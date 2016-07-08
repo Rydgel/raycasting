@@ -16,7 +16,7 @@ public:
     MapManager map;
 
     // camera stuff
-    int strip_width = 2;
+    int strip_width = 1;
     double fov = M_PI * 60 / 180;
     int num_rays;
     double view_dist;
@@ -44,6 +44,8 @@ private:
     void drawRays(sf::RenderWindow& w);
     void drawRay(sf::RenderWindow& w, double xHit, double yHit);
     void drawCamera(sf::RenderWindow& w);
+    void drawFloor(sf::RenderWindow& w);
+    void drawCeiling(sf::RenderWindow& w);
     // camera
     void castRays();
     void castSingleRay(double rayAngle, int stripIdx);

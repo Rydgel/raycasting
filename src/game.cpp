@@ -54,7 +54,7 @@ void Game::gameLoop()
 {
     sf::Clock clock;
 
-    while(this->window.isOpen())
+    while (this->window.isOpen())
     {
         sf::Time elapsed = clock.restart();
         float dt = elapsed.asSeconds();
@@ -80,5 +80,5 @@ Game::Game()
 
 Game::~Game()
 {
-    while(!this->states.empty()) popState();
+    while (!this->states.empty()) popState();
 }

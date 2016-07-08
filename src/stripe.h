@@ -9,6 +9,7 @@ public:
     double height;
     double xHit;
     double yHit;
+    bool wallIsHorizontal;
     int wallType;
 
     Stripe(int left, int strip_width);
