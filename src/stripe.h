@@ -9,6 +9,7 @@ public:
     double height;
     double xHit;
     double yHit;
+    double dist;
     bool wallIsHorizontal;
     int wallType;
 

@@ -2,6 +2,8 @@
 #define RAYCASTING_MAP_MANAGER_H
 
 
+#include <SFML/Graphics/Text.hpp>
+
 class MapManager
 {
 public:
@@ -38,11 +40,10 @@ public:
 
 
     /* Constructor */
-    MapManager()
-    {
-    }
+    MapManager() { }
 
     bool isBlocking(double x, double y);
+    std::string getTextureName(int wall_type);
 };
 
 

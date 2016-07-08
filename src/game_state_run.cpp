@@ -152,6 +152,7 @@ void GameStateRun::castSingleRay(double rayAngle, int stripIdx)
         stripe.width = strip_width;
         stripe.xHit = xHit;
         stripe.yHit = yHit;
+        stripe.dist = dist;
         stripe.wallIsHorizontal = wallIsHorizontal;
         stripe.wallType = wallType;
 
@@ -231,7 +232,7 @@ void GameStateRun::drawCamera(sf::RenderWindow &w)
     int scale = game->scale;
     for (Stripe &stripe : stripes)
     {
-        sf::Texture& tex = game->texmgr.getRef("greystone");
+        sf::Texture& tex = game->texmgr.getRef(map.getTextureName(stripe.wallType));
 
         int offset;
 
