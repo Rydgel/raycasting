@@ -257,6 +257,7 @@ void GameStateRun::drawCamera(sf::RenderWindow &w)
         slice[2].texCoords = sf::Vector2f(offset + strip_width, 64);
         slice[3].texCoords = sf::Vector2f(offset, 64);
 
+        // todo shading
         // some kind of shadows..
         if (!stripe.wallIsHorizontal) {
             slice[0].color = sf::Color(200, 200, 200, 255);
