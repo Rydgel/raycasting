@@ -272,12 +272,53 @@ void GameStateRun::drawCamera(sf::RenderWindow &w)
 
 void GameStateRun::drawFloor(sf::RenderWindow &w)
 {
-    int width = game->screen_width * game->scale;
-    int height = game->screen_height / 2 * game->scale;
-    sf::RectangleShape rectangle(sf::Vector2f(width, height));
-    rectangle.setPosition(0, 0);
-    rectangle.setFillColor(sf::Color(112, 112, 112));
-    w.draw(rectangle);
+    sf::Uint8* pixels = new sf::Uint8[game->screen_width*game->screen_height*game->scale*game->scale*4];
+    sf::Texture texture;
+    texture.create(game->screen_width * game->scale, game->screen_height * game->scale);
+    sf::Sprite sprite(texture);
+
+    sf::Texture& tex = game->texmgr.getRef("colorstone");
+    sf::Image image = tex.copyToImage();
+
+    for (int screenY = game->screen_height * game->scale - 1; screenY >= game->screen_height * game->scale / 2; --screenY) {
+        double distance = game->screen_height * game->scale / (2.0 * screenY - game->screen_height * game->scale);
+        distance = distance * 64;
+
+        double horizontal_scale = .1 * (distance / game->screen_height * game->scale);
+
+        double lineDX = (-sin(player->rot) * horizontal_scale) / 2;
+        double lineDY = (cos(player->rot) * horizontal_scale) / 2;
+
+        double spaceX = player->x * 48 + (distance * cos(player->rot)) - game->screen_width * game->scale / 2 * lineDX;
+        double spaceY = player->y * 48 + (distance * sin(player->rot)) - game->screen_width * game->scale / 2 * lineDY;
+
+        for (int screenX = 0; screenX <= game->screen_width * game->scale - 1; ++screenX) {
+            double texX = (int) floor(spaceX) & 63;
+            double texY = (int) floor(spaceY) & 63;
+
+            sf::Color c = image.getPixel((unsigned int) texX, (unsigned int) texY);
+
+            int ceil = screenX + screenY * game->screen_width * game->scale;
+            int floor = screenX + (game->screen_height * game->scale - screenY) * game->screen_width * game->scale;
+            pixels[ceil * 4] = c.r;
+            pixels[ceil * 4 + 1] = c.g;
+            pixels[ceil * 4 + 2] = c.b;
+            pixels[ceil * 4 + 3] = c.a;
+
+            pixels[floor * 4] = c.r;
+            pixels[floor * 4 + 1] = c.g;
+            pixels[floor * 4 + 2] = c.b;
+            pixels[floor * 4 + 3] = c.a;
+
+            spaceX = spaceX + lineDX;
+            spaceY = spaceY + lineDY;
+        }
+    }
+
+
+    texture.update(pixels);
+    sprite.setPosition(0, 0);
+    w.draw(sprite);
 }
 
 void GameStateRun::drawCeiling(sf::RenderWindow &w)
@@ -314,7 +355,7 @@ void GameStateRun::draw(const float dt)
     // this->game->window.draw(this->background);
 
     drawFloor(this->game->window);
-    drawCeiling(this->game->window);
+    // drawCeiling(this->game->window);
     drawCamera(this->game->window);
 
     // draw fps
