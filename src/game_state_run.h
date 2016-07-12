@@ -28,7 +28,7 @@ public:
     sf::Font font;
 
     int minimap_scale = 16;
-    bool draw_minimap = true;
+    bool draw_minimap = false;
     bool fps_counter = true;
 
     virtual void draw(const float dt);
@@ -45,7 +45,6 @@ private:
     void drawRay(sf::RenderWindow& w, double xHit, double yHit);
     void drawCamera(sf::RenderWindow& w);
     void drawFloor(sf::RenderWindow& w);
-    void drawCeiling(sf::RenderWindow& w);
     // camera
     void castRays();
     void castSingleRay(double rayAngle, int stripIdx);

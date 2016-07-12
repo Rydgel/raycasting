@@ -11,6 +11,8 @@ private:
 
     /* Array of textures used */
     std::map<std::string, sf::Texture> textures;
+    /* Array of images created from textures */
+    std::map<std::string, sf::Image> images;
 
 public:
 
@@ -19,6 +21,7 @@ public:
 
     /* Translate an id into a reference */
     sf::Texture& getRef(const std::string& texture);
+    sf::Image& getImageRef(const std::string& texture);
 
     /* Constructor */
     TextureManager()

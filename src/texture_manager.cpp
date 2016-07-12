@@ -15,6 +15,7 @@ void TextureManager::loadTexture(const std::string& name, const std::string& fil
 
     /* Add it to the list of textures */
     this->textures[name] = tex;
+    this->images[name] = tex.copyToImage();
 
     return;
 }
@@ -22,4 +23,9 @@ void TextureManager::loadTexture(const std::string& name, const std::string& fil
 sf::Texture& TextureManager::getRef(const std::string& texture)
 {
     return this->textures.at(texture);
+}
+
+sf::Image& TextureManager::getImageRef(const std::string& texture)
+{
+    return this->images.at(texture);
 }

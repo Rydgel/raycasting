@@ -245,6 +245,22 @@ void GameStateRun::drawCamera(sf::RenderWindow &w)
         float top = (float) (stripe.top * scale);
         float width = (float) stripe.width * scale;
         float height = (float) stripe.height * scale;
+        double dist = stripe.dist;
+        double shedding;
+
+        if (round(dist) == 0) {
+            shedding = 1;
+        } else {
+            shedding = 1 / dist;
+        }
+
+        if (shedding > 1) {
+            shedding = 1;
+        }
+
+        if (shedding < 0) {
+            shedding = 0;
+        }
 
         sf::VertexArray slice(sf::Quads, 4);
         slice[0].position = sf::Vector2f(left, top);
@@ -257,13 +273,11 @@ void GameStateRun::drawCamera(sf::RenderWindow &w)
         slice[2].texCoords = sf::Vector2f(offset + strip_width, 64);
         slice[3].texCoords = sf::Vector2f(offset, 64);
 
-        // todo shading
-        // some kind of shadows..
-        if (!stripe.wallIsHorizontal) {
-            slice[0].color = sf::Color(200, 200, 200, 255);
-            slice[1].color = sf::Color(200, 200, 200, 255);
-            slice[2].color = sf::Color(200, 200, 200, 255);
-            slice[3].color = sf::Color(200, 200, 200, 255);
+        for (int i = 0; i < 4; ++i)
+        {
+            slice[i].color.r = (sf::Uint8) (slice[i].color.r * shedding);
+            slice[i].color.g = (sf::Uint8) (slice[i].color.g * shedding);
+            slice[i].color.b = (sf::Uint8) (slice[i].color.b * shedding);
         }
 
         w.draw(slice, &tex);
@@ -272,63 +286,70 @@ void GameStateRun::drawCamera(sf::RenderWindow &w)
 
 void GameStateRun::drawFloor(sf::RenderWindow &w)
 {
-    sf::Uint8* pixels = new sf::Uint8[game->screen_width*game->screen_height*game->scale*game->scale*4];
+    sf::Uint8* pixels = new sf::Uint8[game->screen_width * game->screen_height * 4];
     sf::Texture texture;
-    texture.create(game->screen_width * game->scale, game->screen_height * game->scale);
+    texture.create(game->screen_width, game->screen_height);
     sf::Sprite sprite(texture);
 
-    sf::Texture& tex = game->texmgr.getRef("colorstone");
-    sf::Image image = tex.copyToImage();
+    sf::Image& image = game->texmgr.getImageRef("wood_floor");
 
-    for (int screenY = game->screen_height * game->scale - 1; screenY >= game->screen_height * game->scale / 2; --screenY) {
-        double distance = game->screen_height * game->scale / (2.0 * screenY - game->screen_height * game->scale);
+    // stuffs that don't change in the duration of a single frame
+    double rCos = cos(player->rot);
+    double rSin = sin(player->rot);
+    int halfHeight = game->screen_height / 2;
+    int halfWidth = game->screen_width / 2;
+
+    for (int screenY = game->screen_height - 1; screenY >= halfHeight; --screenY) {
+        double distance = game->screen_height / (2.0 * screenY - game->screen_height);
         distance = distance * 64;
 
-        double horizontal_scale = .1 * (distance / game->screen_height * game->scale);
+        double horizontal_scale = 0.75 * distance / game->screen_height;
 
-        double lineDX = (-sin(player->rot) * horizontal_scale) / 2;
-        double lineDY = (cos(player->rot) * horizontal_scale) / 2;
+        double lineDX = -rSin * horizontal_scale;
+        double lineDY = rCos * horizontal_scale;
 
-        double spaceX = player->x * 48 + (distance * cos(player->rot)) - game->screen_width * game->scale / 2 * lineDX;
-        double spaceY = player->y * 48 + (distance * sin(player->rot)) - game->screen_width * game->scale / 2 * lineDY;
+        double spaceX = player->x * 48 + (distance * rCos) - halfWidth * lineDX;
+        double spaceY = player->y * 48 + (distance * rSin) - halfWidth * lineDY;
 
-        for (int screenX = 0; screenX <= game->screen_width * game->scale - 1; ++screenX) {
+        for (int screenX = 0; screenX <= game->screen_width - 1; ++screenX) {
             double texX = (int) floor(spaceX) & 63;
             double texY = (int) floor(spaceY) & 63;
 
             sf::Color c = image.getPixel((unsigned int) texX, (unsigned int) texY);
 
-            int ceil = screenX + screenY * game->screen_width * game->scale;
-            int floor = screenX + (game->screen_height * game->scale - screenY) * game->screen_width * game->scale;
-            pixels[ceil * 4] = c.r;
-            pixels[ceil * 4 + 1] = c.g;
-            pixels[ceil * 4 + 2] = c.b;
-            pixels[ceil * 4 + 3] = c.a;
+            int floor = screenX + screenY * game->screen_width;
+            int ceil = screenX + (game->screen_height - screenY) * game->screen_width;
 
-            pixels[floor * 4] = c.r;
-            pixels[floor * 4 + 1] = c.g;
-            pixels[floor * 4 + 2] = c.b;
+            double shedding = 56 / distance;
+
+            if (shedding < 0.0) {
+                shedding = 0.0;
+            }
+
+            if (shedding > 1) {
+                shedding = 1.0;
+            }
+
+            pixels[floor * 4] = (sf::Uint8) (c.r * shedding);
+            pixels[floor * 4 + 1] = (sf::Uint8) (c.g * shedding);
+            pixels[floor * 4 + 2] = (sf::Uint8) (c.b * shedding);
             pixels[floor * 4 + 3] = c.a;
 
-            spaceX = spaceX + lineDX;
-            spaceY = spaceY + lineDY;
+            pixels[ceil * 4] = (sf::Uint8) (c.r * shedding);
+            pixels[ceil * 4 + 1] = (sf::Uint8) (c.g * shedding);
+            pixels[ceil * 4 + 2] = (sf::Uint8) (c.b * shedding);
+            pixels[ceil * 4 + 3] = c.a;
+
+            spaceX += lineDX;
+            spaceY += lineDY;
         }
     }
 
 
     texture.update(pixels);
     sprite.setPosition(0, 0);
+    sprite.scale(game->scale, game->scale);
     w.draw(sprite);
-}
-
-void GameStateRun::drawCeiling(sf::RenderWindow &w)
-{
-    int width = game->screen_width * game->scale;
-    int height = game->screen_height / 2 * game->scale;
-    sf::RectangleShape rectangle(sf::Vector2f(width, height));
-    rectangle.setPosition(0, height);
-    rectangle.setFillColor(sf::Color(56, 56, 56));
-    w.draw(rectangle);
 }
 
 void GameStateRun::drawFPSCounter(sf::RenderWindow& w, float fps)
