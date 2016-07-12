@@ -24,6 +24,7 @@ void Game::loadTextures()
     texmgr.loadTexture("wall_2", "resources/tex/wall_2.png", false, false);
     texmgr.loadTexture("wall_3", "resources/tex/wall_3.png", false, false);
     texmgr.loadTexture("wall_4", "resources/tex/wall_4.png", false, false);
+    texmgr.loadTexture("door", "resources/tex/door.png", false, false);
 }
 
 void Game::pushState(GameState* state)
@@ -83,8 +84,8 @@ Game::Game()
 
     this->window.create(sf::VideoMode(screen_width * scale, screen_height * scale), "", sf::Style::Default, settings);
     // this->window.create(sf::VideoMode::getFullscreenModes()[0], "raycasting!", sf::Style::Fullscreen);
-    this->window.setFramerateLimit(60);
-    this->window.setVerticalSyncEnabled(true);
+    // this->window.setFramerateLimit(60);
+    // this->window.setVerticalSyncEnabled(true);
 }
 
 Game::~Game()
