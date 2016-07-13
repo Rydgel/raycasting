@@ -141,7 +141,7 @@ void GameStateRun::castSingleRay(double rayAngle, int stripIdx)
 
         // "real" wall height in the game world is 1 unit, the distance from the player to the screen is viewDist,
         // thus the height on the screen is equal to wall_height_real * viewDist / dist
-        double height = view_dist / dist;
+        double height = 1.5 * view_dist / dist;
 
         // top placement is easy since everything is centered on the x-axis, so we simply move
         // it half way down the screen and then half the wall height back up.
@@ -251,7 +251,7 @@ void GameStateRun::drawCamera(sf::RenderWindow &w)
         if (round(dist) == 0) {
             shedding = 1;
         } else {
-            shedding = 1 / dist;
+            shedding = 2 / dist;
         }
 
         if (shedding > 1) {
@@ -270,8 +270,8 @@ void GameStateRun::drawCamera(sf::RenderWindow &w)
 
         slice[0].texCoords = sf::Vector2f(offset, 0);
         slice[1].texCoords = sf::Vector2f(offset + strip_width, 0);
-        slice[2].texCoords = sf::Vector2f(offset + strip_width, 64);
-        slice[3].texCoords = sf::Vector2f(offset, 64);
+        slice[2].texCoords = sf::Vector2f(offset + strip_width, 96);
+        slice[3].texCoords = sf::Vector2f(offset, 96);
 
         for (int i = 0; i < 4; ++i)
         {
@@ -291,7 +291,8 @@ void GameStateRun::drawFloor(sf::RenderWindow &w)
     texture.create(game->screen_width, game->screen_height);
     sf::Sprite sprite(texture);
 
-    sf::Image& image = game->texmgr.getImageRef("wood_floor");
+    sf::Image& imageFloor = game->texmgr.getImageRef("wood_floor");
+    sf::Image& imageCeil = game->texmgr.getImageRef("wood_ceil");
 
     // stuffs that don't change in the duration of a single frame
     double rCos = cos(player->rot);
@@ -301,7 +302,7 @@ void GameStateRun::drawFloor(sf::RenderWindow &w)
 
     for (int screenY = game->screen_height - 1; screenY >= halfHeight; --screenY) {
         double distance = game->screen_height / (2.0 * screenY - game->screen_height);
-        distance = distance * 64;
+        distance = distance * 96;
 
         double horizontal_scale = 0.75 * distance / game->screen_height;
 
@@ -315,12 +316,10 @@ void GameStateRun::drawFloor(sf::RenderWindow &w)
             double texX = (int) floor(spaceX) & 63;
             double texY = (int) floor(spaceY) & 63;
 
-            sf::Color c = image.getPixel((unsigned int) texX, (unsigned int) texY);
-
             int floor = screenX + screenY * game->screen_width;
             int ceil = screenX + (game->screen_height - screenY) * game->screen_width;
 
-            double shedding = 56 / distance;
+            double shedding = 90 / distance;
 
             if (shedding < 0.0) {
                 shedding = 0.0;
@@ -330,15 +329,19 @@ void GameStateRun::drawFloor(sf::RenderWindow &w)
                 shedding = 1.0;
             }
 
-            pixels[floor * 4] = (sf::Uint8) (c.r * shedding);
-            pixels[floor * 4 + 1] = (sf::Uint8) (c.g * shedding);
-            pixels[floor * 4 + 2] = (sf::Uint8) (c.b * shedding);
-            pixels[floor * 4 + 3] = c.a;
+            sf::Color cf = imageFloor.getPixel((unsigned int) texX, (unsigned int) texY);
 
-            pixels[ceil * 4] = (sf::Uint8) (c.r * shedding);
-            pixels[ceil * 4 + 1] = (sf::Uint8) (c.g * shedding);
-            pixels[ceil * 4 + 2] = (sf::Uint8) (c.b * shedding);
-            pixels[ceil * 4 + 3] = c.a;
+            pixels[floor * 4] = (sf::Uint8) (cf.r * shedding);
+            pixels[floor * 4 + 1] = (sf::Uint8) (cf.g * shedding);
+            pixels[floor * 4 + 2] = (sf::Uint8) (cf.b * shedding);
+            pixels[floor * 4 + 3] = cf.a;
+
+            sf::Color cc = imageCeil.getPixel((unsigned int) texX, (unsigned int) texY);
+
+            pixels[ceil * 4] = (sf::Uint8) (cc.r * shedding);
+            pixels[ceil * 4 + 1] = (sf::Uint8) (cc.g * shedding);
+            pixels[ceil * 4 + 2] = (sf::Uint8) (cc.b * shedding);
+            pixels[ceil * 4 + 3] = cc.a;
 
             spaceX += lineDX;
             spaceY += lineDY;
