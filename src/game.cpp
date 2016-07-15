@@ -87,6 +87,7 @@ Game::Game()
     // this->window.create(sf::VideoMode::getFullscreenModes()[0], "raycasting!", sf::Style::Fullscreen);
     this->window.setFramerateLimit(60);
     this->window.setVerticalSyncEnabled(true);
+    this->window.setMouseCursorVisible(false);
 }
 
 Game::~Game()

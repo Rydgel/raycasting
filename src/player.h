@@ -12,6 +12,7 @@ public:
     int dir;
     double rot;
     int speed;
+    int sideSpeed;
     double move_speed;
     double rot_speed;
 

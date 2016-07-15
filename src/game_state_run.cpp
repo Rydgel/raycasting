@@ -1,4 +1,5 @@
 #include <sstream>
+#include <iostream>
 #include "game_state_run.h"
 
 
@@ -20,7 +21,7 @@ void GameStateRun::castRays()
         // where on the screen does ray go through?
         double rayScreenPos = (-num_rays/2 + i) * strip_width;
         // the distance from the viewer to the point on the screen, simply Pythagoras.
-        double rayViewDist = sqrt(rayScreenPos*rayScreenPos + view_dist * view_dist);
+        double rayViewDist = sqrt(rayScreenPos * rayScreenPos + view_dist * view_dist);
         // the angle of the ray, relative to the viewing direction.
         // right triangle: a = sin(A) * c
         double rayAngle = asin(rayScreenPos / rayViewDist);
@@ -383,8 +384,9 @@ void GameStateRun::draw(const float dt)
     drawCamera(this->game->window);
 
     // draw fps
-    if (fps_counter)
+    if (fps_counter) {
         drawFPSCounter(this->game->window, 1.0f / dt);
+    }
 
     // draw minimap
     if (draw_minimap)
@@ -410,6 +412,9 @@ void GameStateRun::handleInput()
     {
         switch (event.type)
         {
+            // we don't process other types of events
+            default:
+                break;
             // window closed
             case sf::Event::Closed:
                 this->game->window.close();
@@ -418,14 +423,18 @@ void GameStateRun::handleInput()
             case sf::Event::KeyPressed:
                 switch (event.key.code)
                 {
-                    case sf::Keyboard::Up:
-                        player->speed = 1; break;
-                    case sf::Keyboard::Down:
-                        player->speed = -1; break;
-                    case sf::Keyboard::Left:
-                        player->dir = -1; break;
-                    case sf::Keyboard::Right:
-                        player->dir = 1; break;
+                    case sf::Keyboard::Z:
+                        player->speed = 1;
+                        break;
+                    case sf::Keyboard::S:
+                        player->speed = -1;
+                        break;
+                    case sf::Keyboard::Q:
+                        player->sideSpeed = -1;
+                        break;
+                    case sf::Keyboard::D:
+                        player->sideSpeed = 1;
+                        break;
                     case sf::Keyboard::M:
                         draw_minimap = !draw_minimap; break;
                     case sf::Keyboard::F:
@@ -438,17 +447,29 @@ void GameStateRun::handleInput()
             case sf::Event::KeyReleased:
                 switch (event.key.code)
                 {
-                    case sf::Keyboard::Up:
-                    case sf::Keyboard::Down:
+                    case sf::Keyboard::Z:
+                    case sf::Keyboard::S:
                         player->speed = 0; break;
-                    case sf::Keyboard::Left:
-                    case sf::Keyboard::Right:
-                        player->dir = 0; break;
+                    case sf::Keyboard::Q:
+                    case sf::Keyboard::D:
+                        player->sideSpeed = 0; break;
                     default: break;
                 }
                 break;
-                // we don't process other types of events
-            default:
+            case sf::Event::MouseMoved:
+                int current_x = sf::Mouse::getPosition(this->game->window).x;
+                int halfWidth = this->game->screen_width * this->game->scale / 2;
+                int halfHeight = this->game->screen_height * this->game->scale / 2;
+                int elapsed_x = halfWidth - current_x;
+
+                if (elapsed_x != 0) {
+                    player->dir = -elapsed_x / abs(elapsed_x);
+                    player->rot_speed = abs(elapsed_x) * M_PI / 10;
+                    sf::Mouse::setPosition(sf::Vector2i(halfWidth, halfHeight), this->game->window);
+                } else {
+                    player->dir = 0;
+                    player->rot_speed = 100.0 * M_PI / 180.0;
+                }
                 break;
         }
     }
@@ -464,6 +485,9 @@ GameStateRun::GameStateRun(Game* game)
     // camera settings
     num_rays = (int) ceil(game->screen_width / strip_width);
     view_dist = (game->screen_width/2) / tan((fov / 2));
+    int halfWidth = this->game->screen_width * this->game->scale / 2;
+    int halfHeight = this->game->screen_height * this->game->scale / 2;
+    sf::Mouse::setPosition(sf::Vector2i(halfWidth, halfHeight), this->game->window);
     // stripes init
     this->initStripes();
 }
