@@ -1,7 +1,7 @@
 #include "player.h"
 
 
-Player::Player(MapManager *map)
+Player::Player(MapManager& map) : map_manager(map)
 {
     this->x = 16.0;
     this->y = 10.0;
@@ -11,7 +11,7 @@ Player::Player(MapManager *map)
     this->sideSpeed = 0;
     this->move_speed = 4.0;
     this->rot_speed = 100.0 * M_PI / 180.0;
-    this->map = map;
+    this->map_manager = map;
 }
 
 void Player::update(const float dt)
@@ -33,7 +33,7 @@ void Player::update(const float dt)
     double newX = this->x + cos(this->rot) * moveStep - sin(this->rot) * moveSideStep;
     double newY = this->y + sin(this->rot) * moveStep + cos(this->rot) * moveSideStep;
 
-    if (this->map->isBlocking(newX, newY)) {   // are we allowed to move to the new position?
+    if (map_manager.isBlocking(newX, newY)) {   // are we allowed to move to the new position?
         return; // no, bail out.
     }
 

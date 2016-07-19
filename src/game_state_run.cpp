@@ -25,7 +25,7 @@ void GameStateRun::castRays()
         // the angle of the ray, relative to the viewing direction.
         // right triangle: a = sin(A) * c
         double rayAngle = asin(rayScreenPos / rayViewDist);
-        this->castSingleRay(player->rot + rayAngle, ++stripIdx);
+        this->castSingleRay(player.rot + rayAngle, ++stripIdx);
     }
 }
 
@@ -63,8 +63,8 @@ void GameStateRun::castSingleRay(double rayAngle, int stripIdx)
     int dXVer = right ? 1 : -1;             // we move either 1 map unit to the left or right
     double dYVer = dXVer * slope;           // how much to move up or down
 
-    double x = right ? ceil(player->x) : floor(player->x);  // starting horizontal position, at one of the edges of the current map block
-    double y = player->y + (x - player->x) * slope;         // starting vertical position. We add the small horizontal step we just made, multiplied by the slope.
+    double x = right ? ceil(player.x) : floor(player.x);  // starting horizontal position, at one of the edges of the current map block
+    double y = player.y + (x - player.x) * slope;         // starting vertical position. We add the small horizontal step we just made, multiplied by the slope.
 
     while (x >= 0 && x < map.mapWidth && y >= 0 && y < map.mapHeight)
     {
@@ -74,8 +74,8 @@ void GameStateRun::castSingleRay(double rayAngle, int stripIdx)
         // is this point inside a wall block?
         if (map.worldMap[wallY][wallX] > 0)
         {
-            double distX = x - player->x;
-            double distY = y - player->y;
+            double distX = x - player.x;
+            double distY = y - player.y;
             dist = distX*distX + distY*distY;      // the distance from the player to this point, squared.
 
             wallType = map.worldMap[wallY][wallX]; // we'll remember the type of wall we hit for later
@@ -99,8 +99,8 @@ void GameStateRun::castSingleRay(double rayAngle, int stripIdx)
     slope = angleCos / angleSin;
     double dYHor = up ? -1 : 1;
     double dXHor = dYHor * slope;
-    y = up ? floor(player->y) : ceil(player->y);
-    x = player->x + (y - player->y) * slope;
+    y = up ? floor(player.y) : ceil(player.y);
+    x = player.x + (y - player.y) * slope;
 
     while (x >= 0 && x < map.mapWidth && y >= 0 && y < map.mapHeight)
     {
@@ -108,8 +108,8 @@ void GameStateRun::castSingleRay(double rayAngle, int stripIdx)
         wallX = (int) floor(x);
         if (map.worldMap[wallY][wallX] > 0)
         {
-            double distX = x - player->x;
-            double distY = y - player->y;
+            double distX = x - player.x;
+            double distY = y - player.y;
             double blockDist = distX*distX + distY*distY;
             if (!dist || blockDist < dist) {
                 dist = blockDist;
@@ -136,7 +136,7 @@ void GameStateRun::castSingleRay(double rayAngle, int stripIdx)
 
         // use perpendicular distance to adjust for fish eye
         // distorted_dist = correct_dist / cos(relative_angle_of_ray)
-        dist = dist * cos(player->rot - rayAngle);
+        dist = dist * cos(player.rot - rayAngle);
 
         // now calc the position, height and width of the wall strip
 
@@ -173,7 +173,7 @@ void GameStateRun::drawRay(sf::RenderWindow& w, double xHit, double yHit)
 {
     sf::Vertex line[] =
             {
-                    sf::Vertex(sf::Vector2f((float) (player->x * minimap_scale), (float) (player->y * minimap_scale))),
+                    sf::Vertex(sf::Vector2f((float) (player.x * minimap_scale), (float) (player.y * minimap_scale))),
                     sf::Vertex(sf::Vector2f(
                             (float) (xHit * minimap_scale),
                             (float) (yHit * minimap_scale))
@@ -296,8 +296,8 @@ void GameStateRun::drawFloor(sf::RenderWindow &w)
     sf::Image& imageCeil = game->texmgr.getImageRef("wood_ceil");
 
     // stuffs that don't change in the duration of a single frame
-    double rCos = cos(player->rot);
-    double rSin = sin(player->rot);
+    double rCos = cos(player.rot);
+    double rSin = sin(player.rot);
     int halfHeight = game->screen_height / 2;
     int halfWidth = game->screen_width / 2;
 
@@ -310,8 +310,8 @@ void GameStateRun::drawFloor(sf::RenderWindow &w)
         double lineDX = -rSin * horizontal_scale;
         double lineDY = rCos * horizontal_scale;
 
-        double spaceX = player->x * 48 + (distance * rCos) - halfWidth * lineDX;
-        double spaceY = player->y * 48 + (distance * rSin) - halfWidth * lineDY;
+        double spaceX = player.x * 48 + (distance * rCos) - halfWidth * lineDX;
+        double spaceY = player.y * 48 + (distance * rSin) - halfWidth * lineDY;
 
         for (int screenX = 0; screenX <= game->screen_width - 1; ++screenX) {
             double texX = (int) floor(spaceX) & 63;
@@ -391,7 +391,7 @@ void GameStateRun::draw(const float dt)
     // draw minimap
     if (draw_minimap)
     {
-        drawMinimap(this->game->window, *player);
+        drawMinimap(this->game->window, player);
         drawRays(this->game->window);
     }
 
@@ -400,7 +400,7 @@ void GameStateRun::draw(const float dt)
 
 void GameStateRun::update(const float dt)
 {
-    player->update(dt);
+    player.update(dt);
     castRays();
 }
 
@@ -424,16 +424,16 @@ void GameStateRun::handleInput()
                 switch (event.key.code)
                 {
                     case sf::Keyboard::Z:
-                        player->speed = 1;
+                        player.speed = 1;
                         break;
                     case sf::Keyboard::S:
-                        player->speed = -1;
+                        player.speed = -1;
                         break;
                     case sf::Keyboard::Q:
-                        player->sideSpeed = -1;
+                        player.sideSpeed = -1;
                         break;
                     case sf::Keyboard::D:
-                        player->sideSpeed = 1;
+                        player.sideSpeed = 1;
                         break;
                     case sf::Keyboard::M:
                         draw_minimap = !draw_minimap; break;
@@ -449,10 +449,10 @@ void GameStateRun::handleInput()
                 {
                     case sf::Keyboard::Z:
                     case sf::Keyboard::S:
-                        player->speed = 0; break;
+                        player.speed = 0; break;
                     case sf::Keyboard::Q:
                     case sf::Keyboard::D:
-                        player->sideSpeed = 0; break;
+                        player.sideSpeed = 0; break;
                     default: break;
                 }
                 break;
@@ -463,12 +463,12 @@ void GameStateRun::handleInput()
                 int elapsed_x = halfWidth - current_x;
 
                 if (elapsed_x != 0) {
-                    player->dir = -elapsed_x / abs(elapsed_x);
-                    player->rot_speed = abs(elapsed_x) * M_PI / 10;
+                    player.dir = -elapsed_x / abs(elapsed_x);
+                    player.rot_speed = abs(elapsed_x) * M_PI / 10;
                     sf::Mouse::setPosition(sf::Vector2i(halfWidth, halfHeight), this->game->window);
                 } else {
-                    player->dir = 0;
-                    player->rot_speed = 100.0 * M_PI / 180.0;
+                    player.dir = 0;
+                    player.rot_speed = 100.0 * M_PI / 180.0;
                 }
                 break;
         }
@@ -477,10 +477,9 @@ void GameStateRun::handleInput()
     return;
 }
 
-GameStateRun::GameStateRun(Game* game)
+GameStateRun::GameStateRun(Game* game) : player(map)
 {
     this->game = game;
-    this->player = new Player(&map);
     this->font.loadFromFile("resources/visitor1.ttf");
     // camera settings
     num_rays = (int) ceil(game->screen_width / strip_width);
@@ -494,5 +493,5 @@ GameStateRun::GameStateRun(Game* game)
 
 GameStateRun::~GameStateRun()
 {
-    delete player;
+
 }

@@ -12,7 +12,7 @@ class GameStateRun : public GameState
 {
 public:
     Game *game;
-    Player *player;
+    Player player;
     MapManager map;
 
     // camera stuff

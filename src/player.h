@@ -16,9 +16,9 @@ public:
     double move_speed;
     double rot_speed;
 
-    MapManager *map;
+    MapManager& map_manager;
 
-    Player(MapManager *map);
+    Player(MapManager& map);
     ~Player() { };
     void update(const float dt);
 };
