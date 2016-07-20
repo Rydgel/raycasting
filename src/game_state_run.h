@@ -6,6 +6,7 @@
 #include "player.h"
 #include "map_manager.h"
 #include "stripe.h"
+#include "camera.h"
 
 
 class GameStateRun : public GameState
@@ -14,15 +15,7 @@ public:
     Game *game;
     Player player;
     MapManager map;
-
-    // camera stuff
-    int strip_width = 1;
-    double fov = M_PI * 60 / 180;
-    int num_rays;
-    double view_dist;
-
-    // stripes drawings
-    std::vector<Stripe> stripes;
+    Camera camera;
 
     // assets
     sf::Font font;
@@ -43,13 +36,7 @@ private:
     void drawFPSCounter(sf::RenderWindow& w, float fps);
     void drawRays(sf::RenderWindow& w);
     void drawRay(sf::RenderWindow& w, double xHit, double yHit);
-    void drawCamera(sf::RenderWindow& w);
     void drawFloor(sf::RenderWindow& w);
-    // camera
-    void castRays();
-    void castSingleRay(double rayAngle, int stripIdx);
-    // stripes
-    void initStripes();
 };
 
 

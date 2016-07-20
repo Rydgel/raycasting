@@ -18,16 +18,10 @@ std::string MapManager::getTextureName(int wall_type)
 {
     switch (wall_type)
     {
-        case 1:
-            return "wall_1";
-        case 2:
-            return "wall_2";
-        case 3:
-            return "wall_3";
-        case 4:
-            return "wall_4";
-        default:
-            return "";
+        case 1: return "wall_1";
+        case 2: return "wall_2";
+        case 3: return "wall_3";
+        case 4: return "wall_4";
+        default: return "";
     }
 }
-
