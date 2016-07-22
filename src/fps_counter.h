@@ -12,7 +12,6 @@ class FpsCounter
 {
 private:
     sf::Font font;
-    sf::Text text;
     int total_frames = 0;
     float total_time = 0.0f;
     double fps = -1.0;
