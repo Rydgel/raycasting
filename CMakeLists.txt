@@ -14,7 +14,9 @@ set(SOURCE_FILES
         src/game_state_run.cpp src/game_state_run.h
         src/map_manager.cpp src/map_manager.h
         src/stripe.h src/stripe.cpp
-        src/camera.cpp src/camera.h src/draw_utils.cpp src/draw_utils.h)
+        src/camera.cpp src/camera.h
+        src/draw_utils.cpp src/draw_utils.h
+        src/fps_counter.cpp src/fps_counter.h)
 add_executable(raycasting ${SOURCE_FILES})
 
 find_package(SFML REQUIRED system window graphics network audio)

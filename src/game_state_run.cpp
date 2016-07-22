@@ -1,7 +1,5 @@
 #include <sstream>
-#include <iostream>
 #include "game_state_run.h"
-#include "draw_utils.h"
 
 
 void GameStateRun::drawRays(sf::RenderWindow& w)
@@ -145,24 +143,6 @@ void GameStateRun::drawFloor(sf::RenderWindow &w)
     delete[] pixels;
 }
 
-void GameStateRun::drawFPSCounter(sf::RenderWindow& w, float fps)
-{
-    sf::Text text;
-    text.setFont(font);
-    text.setCharacterSize(40);
-    text.setStyle(sf::Text::Bold);
-    text.setColor(sf::Color::White);
-    text.setPosition(0, 0);
-
-    std::ostringstream ss;
-    ss << round(fps);
-
-    text.setString(ss.str());
-
-    w.draw(text);
-}
-
-
 void GameStateRun::draw(const float dt)
 {
     this->game->window.clear(sf::Color::Black);
@@ -173,7 +153,7 @@ void GameStateRun::draw(const float dt)
     // draw fps
     if (fps_counter)
     {
-        drawFPSCounter(this->game->window, 1.0f / dt);
+        fpsCounter.draw(this->game->window);
     }
 
     // draw minimap
@@ -190,6 +170,7 @@ void GameStateRun::update(const float dt)
 {
     player.update(dt);
     camera.update();
+    fpsCounter.addFrameData(dt);
 }
 
 void GameStateRun::handleInput()
@@ -270,7 +251,7 @@ GameStateRun::GameStateRun(Game* game)
 , camera(game, player, map)
 {
     this->game = game;
-    this->font.loadFromFile("resources/visitor1.ttf");
+    this->fpsCounter = FpsCounter();
     int halfWidth = this->game->screen_width * this->game->scale / 2;
     int halfHeight = this->game->screen_height * this->game->scale / 2;
     sf::Mouse::setPosition(sf::Vector2i(halfWidth, halfHeight), this->game->window);
