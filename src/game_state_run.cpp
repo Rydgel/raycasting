@@ -2,75 +2,6 @@
 #include "game_state_run.h"
 
 
-void GameStateRun::drawRays(sf::RenderWindow& w)
-{
-    for (const Stripe &stripe : camera.stripes)
-    {
-        this->drawRay(w, stripe.xHit, stripe.yHit);
-    }
-}
-
-void GameStateRun::drawRay(sf::RenderWindow& w, double xHit, double yHit)
-{
-    sf::Vector2f start((float) (player.x * minimap_scale), (float) (player.y * minimap_scale));
-    sf::Vector2f end((float) (xHit * minimap_scale), (float) (yHit * minimap_scale));
-    sf::Color color(0, 100, 0, 255 / 3);
-
-    sf::VertexArray vertices(sf::Lines, 2);
-    vertices[0] = sf::Vertex(start);
-    vertices[1] = sf::Vertex(end);
-    vertices[0].color = color;
-    vertices[1].color = color;
-
-    w.draw(vertices);
-}
-
-void GameStateRun::drawMinimap(sf::RenderWindow& w, Player& player)
-{
-    for (int y = 0; y < this->map.mapHeight; ++y)
-    {
-        for (int x = 0; x < this->map.mapWidth; ++x)
-        {
-            int wall = this->map.worldMap[y][x];
-
-            if (wall > 0)
-            {
-                sf::RectangleShape rectangle(sf::Vector2f(minimap_scale, minimap_scale));
-                rectangle.setPosition(x * minimap_scale, y * minimap_scale);
-                rectangle.setFillColor(sf::Color(200, 200, 200, 128));
-                w.draw(rectangle);
-            }
-        }
-    }
-
-    this->drawPlayerMinimap(w, player);
-}
-
-void GameStateRun::drawPlayerMinimap(sf::RenderWindow& w, Player& player)
-{
-    // player dot
-    sf::RectangleShape rectangle(sf::Vector2f(4, 4));
-    rectangle.setFillColor(sf::Color(255, 0, 0, 128));
-    rectangle.setPosition((float) (player.x * minimap_scale - 2), (float) (player.y * minimap_scale - 2));
-    w.draw(rectangle);
-    // player direction line
-    sf::Vector2f start(
-            (float) (player.x * minimap_scale),
-            (float) (player.y * minimap_scale));
-    sf::Vector2f end(
-            (float) ((player.x + cos(player.rot) * 4) * minimap_scale),
-            (float) ((player.y + sin(player.rot) * 4) * minimap_scale));
-    sf::Color color(255, 0, 0, 128);
-
-    sf::VertexArray vertices(sf::Lines, 2);
-    vertices[0] = sf::Vertex(start);
-    vertices[1] = sf::Vertex(end);
-    vertices[0].color = color;
-    vertices[1].color = color;
-
-    w.draw(vertices);
-}
-
 void GameStateRun::drawFloor(sf::RenderWindow &w)
 {
     sf::Uint8* pixels = new sf::Uint8[game->screen_width * game->screen_height * 4];
@@ -150,17 +81,16 @@ void GameStateRun::draw(const float dt)
     drawFloor(this->game->window);
     camera.draw(this->game->window);
 
+    // draw minimap
+    if (draw_minimap)
+    {
+        minimap.draw(this->game->window);
+    }
+
     // draw fps
     if (fps_counter)
     {
         fpsCounter.draw(this->game->window);
-    }
-
-    // draw minimap
-    if (draw_minimap)
-    {
-        drawMinimap(this->game->window, player);
-        drawRays(this->game->window);
     }
 
     return;
@@ -249,6 +179,7 @@ void GameStateRun::handleInput()
 GameStateRun::GameStateRun(Game* game)
 : player(map)
 , camera(game, player, map)
+, minimap(game, player, map, camera)
 {
     this->game = game;
     this->fpsCounter = FpsCounter();

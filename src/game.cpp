@@ -80,12 +80,9 @@ Game::Game()
 {
     this->loadTextures();
 
-    sf::ContextSettings settings;
-    settings.antialiasingLevel = 8;
-
-    this->window.create(sf::VideoMode(screen_width * scale, screen_height * scale), "", sf::Style::Default, settings);
+    this->window.create(sf::VideoMode(screen_width * scale, screen_height * scale), "", sf::Style::Default);
     // this->window.create(sf::VideoMode::getFullscreenModes()[0], "raycasting!", sf::Style::Fullscreen);
-    this->window.setFramerateLimit(60);
+    // this->window.setFramerateLimit(60);
     this->window.setVerticalSyncEnabled(true);
     this->window.setMouseCursorVisible(false);
 }

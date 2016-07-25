@@ -8,6 +8,7 @@
 #include "stripe.h"
 #include "camera.h"
 #include "fps_counter.h"
+#include "minimap.h"
 
 
 class GameStateRun : public GameState
@@ -18,8 +19,8 @@ public:
     MapManager map;
     Camera camera;
     FpsCounter fpsCounter;
+    Minimap minimap;
 
-    int minimap_scale = 16;
     bool draw_minimap = false;
     bool fps_counter = true;
 
@@ -30,10 +31,6 @@ public:
     GameStateRun(Game *game);
     ~GameStateRun();
 private:
-    void drawMinimap(sf::RenderWindow& w, Player& player);
-    void drawPlayerMinimap(sf::RenderWindow& w, Player& player);
-    void drawRays(sf::RenderWindow& w);
-    void drawRay(sf::RenderWindow& w, double xHit, double yHit);
     void drawFloor(sf::RenderWindow& w);
 };
 
