@@ -17,7 +17,8 @@ set(SOURCE_FILES
         src/camera.cpp src/camera.h
         src/draw_utils.cpp src/draw_utils.h
         src/fps_counter.cpp src/fps_counter.h
-        src/minimap.cpp src/minimap.h)
+        src/minimap.cpp src/minimap.h
+        src/floor_ceiling.cpp src/floor_ceiling.h)
 add_executable(raycasting ${SOURCE_FILES})
 
 find_package(SFML REQUIRED system window graphics network audio)

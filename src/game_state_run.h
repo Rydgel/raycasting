@@ -9,6 +9,7 @@
 #include "camera.h"
 #include "fps_counter.h"
 #include "minimap.h"
+#include "floor_ceiling.h"
 
 
 class GameStateRun : public GameState
@@ -20,18 +21,17 @@ public:
     Camera camera;
     FpsCounter fpsCounter;
     Minimap minimap;
+    FloorCeiling floorCeiling;
 
     bool draw_minimap = false;
     bool fps_counter = true;
 
     virtual void draw(const float dt);
     virtual void update(const float dt);
-    virtual void handleInput();
+    virtual void handleInput(const float dt);
 
     GameStateRun(Game *game);
     ~GameStateRun();
-private:
-    void drawFloor(sf::RenderWindow& w);
 };
 
 
