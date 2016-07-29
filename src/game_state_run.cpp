@@ -7,18 +7,10 @@ void GameStateRun::draw(const float dt)
 
     floorCeiling.draw(this->game->window);
     camera.draw(this->game->window);
-
     // draw minimap
-    if (draw_minimap)
-    {
-        minimap.draw(this->game->window);
-    }
-
+    if (draw_minimap) minimap.draw(this->game->window);
     // draw fps
-    if (fps_counter)
-    {
-        fpsCounter.draw(this->game->window);
-    }
+    if (fps_counter) fpsCounter.draw(this->game->window);
 
     return;
 }
