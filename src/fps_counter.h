@@ -11,15 +11,19 @@
 class FpsCounter
 {
 private:
+
     sf::Font font;
     int total_frames = 0;
     float total_time = 0.0f;
     double fps = -1.0;
+
 public:
+
     FpsCounter();
-    void addFrameData(float dt);
+    void addFrameData(const float dt);
     void draw(sf::RenderWindow &w);
     ~FpsCounter() {};
+
 };
 
 

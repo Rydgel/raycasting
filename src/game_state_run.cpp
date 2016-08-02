@@ -8,11 +8,11 @@ void GameStateRun::draw(const float dt)
     floorCeiling.draw(this->game->window);
     camera.draw(this->game->window);
     // draw minimap
-    if (draw_minimap) minimap.draw(this->game->window);
+    if (draw_minimap)
+        minimap.draw(this->game->window);
     // draw fps
-    if (fps_counter) fpsCounter.draw(this->game->window);
-
-    return;
+    if (fps_counter)
+        fpsCounter.draw(this->game->window);
 }
 
 void GameStateRun::update(const float dt)
@@ -91,8 +91,6 @@ void GameStateRun::handleInput(const float dt)
                 break;
         }
     }
-
-    return;
 }
 
 GameStateRun::GameStateRun(Game* game)
@@ -106,9 +104,4 @@ GameStateRun::GameStateRun(Game* game)
     int halfWidth = this->game->screen_width * this->game->scale / 2;
     int halfHeight = this->game->screen_height * this->game->scale / 2;
     sf::Mouse::setPosition(sf::Vector2i(halfWidth, halfHeight), this->game->window);
-}
-
-GameStateRun::~GameStateRun()
-{
-
 }

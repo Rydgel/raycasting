@@ -6,7 +6,7 @@ FpsCounter::FpsCounter()
     font.loadFromFile("resources/visitor1.ttf");
 }
 
-void FpsCounter::addFrameData(float dt)
+void FpsCounter::addFrameData(const float dt)
 {
     total_frames ++;
     total_time += dt;

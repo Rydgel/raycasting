@@ -24,9 +24,7 @@ public:
     sf::Image& getImageRef(const std::string& texture);
 
     /* Constructor */
-    TextureManager()
-    {
-    }
+    TextureManager() {}
 };
 
 #endif //OUTRUN_TEXTURE_MANAGER_H

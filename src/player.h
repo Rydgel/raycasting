@@ -7,6 +7,7 @@
 class Player
 {
 public:
+
     double x;
     double y;
     int dir;

@@ -1,7 +1,7 @@
 #import "stripe.h"
 
 
-Stripe::Stripe(int left, int strip_width)
+Stripe::Stripe(const int left, const int strip_width)
 {
     this->top = 0;
     this->left = left;

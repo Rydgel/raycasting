@@ -1,8 +1,7 @@
-#include <cmath>
 #include "map_manager.h"
 
 
-bool MapManager::isBlocking(double x, double y)
+bool MapManager::isBlocking(const double x, const double y)
 {
     // First make sure that we cannot move
     // outside the boundaries of the level
@@ -14,7 +13,7 @@ bool MapManager::isBlocking(double x, double y)
     return (worldMap[(int) floor(y)][(int) floor(x)] != 0);
 }
 
-std::string MapManager::getTextureName(int wall_type)
+std::string MapManager::getTextureName(const int wall_type)
 {
     switch (wall_type)
     {

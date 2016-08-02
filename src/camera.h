@@ -12,6 +12,7 @@
 class Camera
 {
 public:
+
     Game *game;
     const Player& player;
     MapManager& map;
@@ -30,10 +31,12 @@ public:
     void update();
     void draw(sf::RenderWindow &w);
     ~Camera() {};
+
 private:
+
     // stripes
     void initStripes();
-    void castSingleRay(double rayAngle, int stripIdx);
+    void castSingleRay(const double rayAngle, const int stripIdx);
 };
 
 

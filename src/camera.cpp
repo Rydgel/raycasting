@@ -41,21 +41,21 @@ void Camera::update()
     }
 }
 
-void Camera::castSingleRay(double rayAngle, int stripIdx)
+void Camera::castSingleRay(const double rayAngle, const int stripIdx)
 {
     // first make sure the angle is between 0 and 360 degrees
-    rayAngle = fmod(rayAngle, 2 * M_PI);
-    if (rayAngle < 0) rayAngle += 2 * M_PI;
+    double newAngle = fmod(rayAngle, 2 * M_PI);
+    if (newAngle < 0) newAngle += 2 * M_PI;
 
     // moving right/left? up/down? Determined by which quadrant the angle is in.
-    bool right = (rayAngle > 2 * M_PI * 0.75 || rayAngle < 2 * M_PI * 0.25);
-    bool up = (rayAngle < 0 || rayAngle > M_PI);
+    bool right = (newAngle > 2 * M_PI * 0.75 || newAngle < 2 * M_PI * 0.25);
+    bool up = (newAngle < 0 || newAngle > M_PI);
 
     int wallType = 0;
 
     // only do these once
-    double angleSin = sin(rayAngle);
-    double angleCos = cos(rayAngle);
+    double angleSin = sin(newAngle);
+    double angleCos = cos(newAngle);
 
     double dist = 0.0;   // the distance to the block we hit
     double xHit = 0;        // the x and y coord of where the ray hit the block
@@ -148,7 +148,7 @@ void Camera::castSingleRay(double rayAngle, int stripIdx)
 
         // use perpendicular distance to adjust for fish eye
         // distorted_dist = correct_dist / cos(relative_angle_of_ray)
-        dist = dist * cos(player.rot - rayAngle);
+        dist = dist * cos(player.rot - newAngle);
 
         // now calc the position, height and width of the wall strip
 

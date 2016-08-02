@@ -10,6 +10,7 @@
 class FloorCeiling
 {
 public:
+
     Game *game;
     const Player& player;
     MapManager& map;
@@ -18,7 +19,9 @@ public:
     FloorCeiling(Game *game, Player &p, MapManager &m, Camera& c);
     void draw(sf::RenderWindow& w);
     ~FloorCeiling();
+
 private:
+
     // pixels buffer
     sf::Uint8* pixels;
     // texture buffer

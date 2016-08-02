@@ -15,6 +15,7 @@
 class GameStateRun : public GameState
 {
 public:
+
     Game *game;
     Player player;
     MapManager map;
@@ -31,7 +32,7 @@ public:
     virtual void handleInput(const float dt);
 
     GameStateRun(Game *game);
-    ~GameStateRun();
+    ~GameStateRun() {};
 };
 
 

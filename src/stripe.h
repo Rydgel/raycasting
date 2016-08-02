@@ -3,6 +3,7 @@
 
 class Stripe {
 public:
+
     double top;
     double left;
     double width;
@@ -13,7 +14,7 @@ public:
     bool wallIsHorizontal;
     int wallType;
 
-    Stripe(int left, int strip_width);
+    Stripe(const int left, const int strip_width);
     ~Stripe() {};
 };
 

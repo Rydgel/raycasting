@@ -9,6 +9,7 @@
 class Minimap
 {
 public:
+
     Game *game;
     const Player& player;
     MapManager& map;
@@ -19,11 +20,13 @@ public:
     Minimap(Game *game, Player& p, MapManager& m, Camera& c);
     void draw(sf::RenderWindow& w);
     ~Minimap() {};
+
 private:
+
     void drawMinimap(sf::RenderWindow& w);
     void drawPlayerMinimap(sf::RenderWindow& w);
     void drawRays(sf::RenderWindow& w);
-    void drawRay(sf::RenderWindow& w, double xHit, double yHit);
+    void drawRay(sf::RenderWindow& w, const double xHit, const double yHit);
 };
 
 

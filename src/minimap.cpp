@@ -55,7 +55,7 @@ void Minimap::drawPlayerMinimap(sf::RenderWindow &w)
     w.draw(vertices);
 }
 
-void Minimap::drawRay(sf::RenderWindow &w, double xHit, double yHit)
+void Minimap::drawRay(sf::RenderWindow &w, const double xHit, const double yHit)
 {
     sf::Vector2f start((float) (player.x * minimap_scale), (float) (player.y * minimap_scale));
     sf::Vector2f end((float) (xHit * minimap_scale), (float) (yHit * minimap_scale));

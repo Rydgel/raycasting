@@ -1,9 +1,5 @@
-#include <stack>
-
-#include <SFML/Graphics.hpp>
-
 #include "game.h"
-#include "game_state.h"
+
 
 void Game::loadTextures()
 {
@@ -54,7 +50,7 @@ void Game::changeState(GameState* state)
 
 GameState* Game::peekState()
 {
-    if(this->states.empty()) return nullptr;
+    if (this->states.empty()) return nullptr;
     return this->states.top();
 }
 
@@ -67,7 +63,7 @@ void Game::gameLoop()
         sf::Time elapsed = clock.restart();
         float dt = elapsed.asSeconds();
 
-        if(peekState() == nullptr) continue;
+        if (peekState() == nullptr) continue;
         peekState()->handleInput(dt);
         peekState()->update(dt);
         this->window.clear(sf::Color(0, 0, 0));

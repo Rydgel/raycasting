@@ -1,12 +1,14 @@
 #ifndef RAYCASTING_MAP_MANAGER_H
 #define RAYCASTING_MAP_MANAGER_H
 
-
+#include <cmath>
 #include <SFML/Graphics/Text.hpp>
+
 
 class MapManager
 {
 public:
+
     static int const mapWidth = 32;
     static int const mapHeight = 24;
 
@@ -42,8 +44,8 @@ public:
     /* Constructor */
     MapManager() { }
 
-    bool isBlocking(double x, double y);
-    std::string getTextureName(int wall_type);
+    bool isBlocking(const double x, const double y);
+    std::string getTextureName(const int wall_type);
 };
 
 

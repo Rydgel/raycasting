@@ -1,7 +1,3 @@
-#include <SFML/Graphics.hpp>
-#include <map>
-#include <string>
-
 #include "texture_manager.h"
 
 

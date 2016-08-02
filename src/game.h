@@ -4,6 +4,7 @@
 #include <stack>
 #include <SFML/Graphics.hpp>
 #include "texture_manager.h"
+#include "game_state.h"
 
 class GameState;
 
@@ -14,6 +15,7 @@ private:
     void loadTextures();
 
 public:
+
     unsigned int screen_width = 320;
     unsigned int screen_height = 200;
     unsigned int scale = 4;
