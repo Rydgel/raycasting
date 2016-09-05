@@ -27,7 +27,8 @@ void FpsCounter::draw(sf::RenderWindow &w)
         text.setFont(font);
         text.setCharacterSize(40);
         text.setStyle(sf::Text::Bold);
-        text.setColor(sf::Color::White);
+        text.setFillColor(sf::Color::White);
+        text.setOutlineColor(sf::Color::White);
         text.setPosition(0, 0);
 
         std::ostringstream ss;
