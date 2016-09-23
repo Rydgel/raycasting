@@ -1,3 +1,4 @@
+#include <iostream>
 #include "game.h"
 
 
@@ -76,8 +77,16 @@ Game::Game()
 {
     this->loadTextures();
 
-    this->window.create(sf::VideoMode(screen_width * scale, screen_height * scale), "", sf::Style::Default);
+    // bordeless window
+    this->window.create(sf::VideoMode(screen_width * scale, screen_height * scale), "", sf::Style::None);
     // this->window.create(sf::VideoMode::getFullscreenModes()[0], "raycasting!", sf::Style::Fullscreen);
+    if (sf::VideoMode::getFullscreenModes().size() > 0) {
+        unsigned int width = sf::VideoMode::getFullscreenModes()[0].width;
+        unsigned int height = sf::VideoMode::getFullscreenModes()[0].height;
+        this->window.setSize(sf::Vector2u(width, height));
+        this->window.setPosition(sf::Vector2i(0, 0));
+    }
+
     // this->window.setFramerateLimit(60);
     this->window.setVerticalSyncEnabled(true);
     this->window.setMouseCursorVisible(false);
