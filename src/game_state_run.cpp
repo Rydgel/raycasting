@@ -26,7 +26,7 @@ void GameStateRun::handleInput(const float dt)
 {
     sf::Event event;
 
-    while(this->game->window.pollEvent(event))
+    while (this->game->window.pollEvent(event))
     {
         switch (event.type)
         {
