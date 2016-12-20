@@ -7,6 +7,7 @@
 #include "stripe.h"
 #include "player.h"
 #include "game.h"
+#include "utility/constants.h"
 
 
 class Camera
@@ -21,7 +22,7 @@ public:
     int screen_height;
     int scale;
     int strip_width = 1;
-    double fov = M_PI * 60 / 180;
+    double fov = Constants::PI * 60 / 180;
     int num_rays;
     double view_dist;
     // stripes drawings

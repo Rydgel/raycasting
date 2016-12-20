@@ -1,4 +1,5 @@
 #include "player.h"
+#include "utility/constants.h"
 
 
 Player::Player(MapManager& map) : map_manager(map)
@@ -10,7 +11,7 @@ Player::Player(MapManager& map) : map_manager(map)
     this->speed = 0;
     this->sideSpeed = 0;
     this->move_speed = 4.0;
-    this->rot_speed = 100.0 * M_PI / 180.0;
+    this->rot_speed = 100.0 * Constants::PI / 180.0;
     this->map_manager = map;
 }
 
@@ -25,8 +26,8 @@ void Player::update(const float dt)
     this->rot += this->dir * this->rot_speed * dt;
 
     // make sure the angle is between 0 and 360 degrees
-    while (rot < 0) rot += 2 * M_PI;
-    while (rot >= 2 * M_PI) rot -= 2 * M_PI;
+    while (rot < 0) rot += 2 * Constants::PI;
+    while (rot >= 2 * Constants::PI) rot -= 2 * Constants::PI;
 
     // Calculate new player position with simple trigonometry
 
@@ -40,4 +41,8 @@ void Player::update(const float dt)
     // Set new position
     this->x = newX;
     this->y = newY;
+
+    // At the end of the frame, the player dir and speed are reset
+    this->dir = 0;
+    this->rot_speed = 100.0 * Constants::PI / 180.0;
 }

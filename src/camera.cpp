@@ -1,4 +1,5 @@
 #include "camera.h"
+#include "utility/constants.h"
 
 
 Camera::Camera(Game *g, Player& p, MapManager& m)
@@ -44,12 +45,12 @@ void Camera::update()
 void Camera::castSingleRay(const double rayAngle, const int stripIdx)
 {
     // first make sure the angle is between 0 and 360 degrees
-    double newAngle = fmod(rayAngle, 2 * M_PI);
-    if (newAngle < 0) newAngle += 2 * M_PI;
+    double newAngle = fmod(rayAngle, 2 * Constants::PI);
+    if (newAngle < 0) newAngle += 2 * Constants::PI;
 
     // moving right/left? up/down? Determined by which quadrant the angle is in.
-    bool right = (newAngle > 2 * M_PI * 0.75 || newAngle < 2 * M_PI * 0.25);
-    bool up = (newAngle < 0 || newAngle > M_PI);
+    bool right = (newAngle > 2 * Constants::PI * 0.75 || newAngle < 2 * Constants::PI * 0.25);
+    bool up = (newAngle < 0 || newAngle > Constants::PI);
 
     int wallType = 0;
 

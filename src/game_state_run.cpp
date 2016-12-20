@@ -82,11 +82,8 @@ void GameStateRun::handleInput(const float dt)
 
                 if (elapsed_x != 0) {
                     player.dir = -elapsed_x / abs(elapsed_x);
-                    player.rot_speed = abs(elapsed_x) * M_PI / 10;
+                    player.rot_speed = abs(elapsed_x) * Constants::PI / 10;
                     sf::Mouse::setPosition(sf::Vector2i(halfWidth, halfHeight), this->game->window);
-                } else {
-                    player.dir = 0;
-                    player.rot_speed = 100.0 * M_PI / 180.0;
                 }
                 break;
         }

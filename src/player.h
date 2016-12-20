@@ -1,7 +1,7 @@
 #ifndef RAYCASTING_PLAYER_H
 #define RAYCASTING_PLAYER_H
 
-#import <cmath>
+#include <cmath>
 #include "map_manager.h"
 
 class Player

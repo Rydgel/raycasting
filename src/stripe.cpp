@@ -1,4 +1,4 @@
-#import "stripe.h"
+#include "stripe.h"
 
 
 Stripe::Stripe(const int left, const int strip_width)
