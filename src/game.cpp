@@ -28,16 +28,12 @@ void Game::loadTextures()
 void Game::pushState(GameState* state)
 {
     this->states.push(state);
-
-    return;
 }
 
 void Game::popState()
 {
     delete this->states.top();
     this->states.pop();
-
-    return;
 }
 
 void Game::changeState(GameState* state)
@@ -45,8 +41,6 @@ void Game::changeState(GameState* state)
     if (!this->states.empty())
         popState();
     pushState(state);
-
-    return;
 }
 
 GameState* Game::peekState()
@@ -78,7 +72,7 @@ Game::Game()
     this->loadTextures();
 
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 0;
+    settings.antialiasingLevel = 4;
     // this->window.create(sf::VideoMode(screen_width * scale, screen_height * scale), "", sf::Style::None, settings);
     // unsigned int width = sf::VideoMode::getFullscreenModes()[0].width;
     // unsigned int height = sf::VideoMode::getFullscreenModes()[0].height;

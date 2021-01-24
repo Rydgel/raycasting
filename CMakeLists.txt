@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 project(raycasting)
 
+cmake_policy(SET CMP0074 OLD)
+set(SFML_ROOT "C:/Frameworks/SFML-2.5.1")
+
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -O3")

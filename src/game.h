@@ -18,7 +18,7 @@ public:
 
     unsigned int screen_width = 320;
     unsigned int screen_height = 200;
-    unsigned int scale = 4;
+    unsigned int scale = 8;
 
     std::stack<GameState*> states;
 

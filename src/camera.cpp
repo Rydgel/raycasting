@@ -79,7 +79,7 @@ void Camera::castSingleRay(const double rayAngle, const int stripIdx)
     double x = right ? ceil(player.x) : floor(player.x);  // starting horizontal position, at one of the edges of the current map block
     double y = player.y + (x - player.x) * slope;         // starting vertical position. We add the small horizontal step we just made, multiplied by the slope.
 
-    while (x >= 0 && x < map.mapWidth && y >= 0 && y < map.mapHeight)
+    while (x >= 0 && x < MapManager::mapWidth && y >= 0 && y < MapManager::mapHeight)
     {
         wallX = (int) floor(x + (right ? 0 : -1));
         wallY = (int) floor(y);
@@ -115,7 +115,7 @@ void Camera::castSingleRay(const double rayAngle, const int stripIdx)
     y = up ? floor(player.y) : ceil(player.y);
     x = player.x + (y - player.y) * slope;
 
-    while (x >= 0 && x < map.mapWidth && y >= 0 && y < map.mapHeight)
+    while (x >= 0 && x < MapManager::mapWidth && y >= 0 && y < MapManager::mapHeight)
     {
         wallY = (int) floor(y + (up ? -1 : 0));
         wallX = (int) floor(x);
@@ -140,7 +140,7 @@ void Camera::castSingleRay(const double rayAngle, const int stripIdx)
         y += dYHor;
     }
 
-    if (dist)
+    if (dist > 0.0)
     {
         // we update the stripe
         Stripe stripe = stripes[stripIdx - 1];
@@ -188,8 +188,8 @@ void Camera::draw(sf::RenderWindow &w)
         else
             offset = (int) fmod(stripe.yHit * 64, 64);
 
-        float left = (float) (stripe.left * scale);
-        float top = (float) (stripe.top * scale);
+        auto left = (float) (stripe.left * scale);
+        auto top = (float) (stripe.top * scale);
         float width = (float) stripe.width * scale;
         float height = (float) stripe.height * scale;
         double dist = stripe.dist;
